@@ -456,6 +456,7 @@ namespace AdhawkApi
 
             UDPRequestCallback calresult = (byte[] data, UDPRequestStatus status) =>
             {
+                Debug.Log("Status " + status);
                 if (status == UDPRequestStatus.AckSuccess)
                 {
                     Streams.Gaze.Start();
@@ -530,6 +531,7 @@ namespace AdhawkApi
                 ),
                 timeout: 1.0f
             );
+            Debug.Log("Status " + false);
             Calibrating = false;
         }
 

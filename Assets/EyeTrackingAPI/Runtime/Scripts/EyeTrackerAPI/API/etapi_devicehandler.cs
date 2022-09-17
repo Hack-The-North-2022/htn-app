@@ -48,6 +48,7 @@ namespace AdhawkApi
         public Coroutine RunCalibrationProcedure()
         {
             Debug.Log("Starting calibration routine");
+            Debug.Log("calibration Device: " + (DeviceHandler == null));
             if (DeviceHandler == null) return null;
             return DeviceHandler.RunCalibration();
         }
