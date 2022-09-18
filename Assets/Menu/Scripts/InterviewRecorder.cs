@@ -7,7 +7,7 @@ using System.IO;
 public class InterviewRecorder : MonoBehaviour
 {
     bool ready=false;
-    bool recording = false;
+    public bool recording = false;
     string microphone = "MacBook Pro Microphone";
     AudioSource audioSource;
     void Start()
@@ -17,7 +17,7 @@ public class InterviewRecorder : MonoBehaviour
         /* audioSource.clip = Microphone.Start("Built-in Microphone", true, 10, 44100); */
         /* audioSource.Play(); */
         StartCoroutine(rua());
-        StartCoroutine(APIReq.APIReqs.QuestionAudio());
+        //StartCoroutine(APIReq.APIReqs.QuestionAudio());
         audioSource = GetComponent<AudioSource>();
 
 
@@ -81,9 +81,6 @@ public class InterviewRecorder : MonoBehaviour
         {
             Debug.Log("Microphone found");
             ready = true;
-            StartRecording();
-            Invoke("StopRecording",5);
-
         }
         else
         {

@@ -16,5 +16,6 @@ namespace Manager{
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        
     }
 }
