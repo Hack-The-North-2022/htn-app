@@ -247,8 +247,11 @@ namespace APIReq
             string uri = APIReqs.baseUrl+"/question_audio";
             using (UnityWebRequest webRequest = new UnityWebRequest(uri,"POST")){
                 webRequest.SetRequestHeader("Content-Type","application/json");
-                webRequest.uploadHandler = new UploadHandlerRaw(new byte[10]);
+                byte[] body = Encoding.UTF8.GetBytes(JsonUtility.ToJson(Manager.DataManager.Instance.code));
+
+                webRequest.uploadHandler = new UploadHandlerRaw(body);
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
+
                 yield return webRequest.SendWebRequest();
 
                 string[] pages = uri.Split('/');
