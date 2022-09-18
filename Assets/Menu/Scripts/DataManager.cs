@@ -17,6 +17,4 @@ namespace Manager{
             DontDestroyOnLoad(gameObject);
         }
     }
-    public static AudioClip retrieveAudio(APIReq.QuestionInfo q){
-    }
 }

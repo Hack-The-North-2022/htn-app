@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using AdhawkApi;
+using APIReq;
 
 public class PersistentToggleDot : MonoBehaviour
 {
@@ -16,7 +17,12 @@ public class PersistentToggleDot : MonoBehaviour
     private bool recordingEyeContact = false;
 
     public void StartRecording() { recordingEyeContact = true; eyeTrackingHits.Clear(); }
-    public Dictionary<string, float> StopRecording() { recordingEyeContact = false; return eyeTrackingHits; }
+    public void StopRecording() {
+        recordingEyeContact = false; 
+
+        StartCoroutine(APIReq.APIReqs.SendAdHawk(eyeTrackingHits));
+
+    }
 
     private void Awake()
     {

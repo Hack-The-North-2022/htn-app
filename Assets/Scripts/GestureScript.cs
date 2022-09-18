@@ -14,7 +14,6 @@ public class GestureScript : MonoBehaviour
     // Start is called before the first frame update
     Vector3 prevRight;
     Vector3 prevLeft;
-    Dictionary<string, float> recordingData = new Dictionary<string, float>();
 
     private bool isRecording = false;
     void Start()
@@ -31,12 +30,8 @@ public class GestureScript : MonoBehaviour
         gestureCount = -1;
     }
 
-    public Dictionary<string, float> StopRecording() {
-        recordingData.Clear();
-        recordingData.Add("GestureCount", gestureCount);
-        recordingData.Add("StrikezoneGestureCount", amountInStrikeZone);
-        recordingData.Add("Duration", duration);
-        return recordingData;
+    public void StopRecording() {
+        APIReq.APIReqs.SendGestures(gestureCount,amountInStrikeZone,duration);
     }
     
     // Update is called once per frame
