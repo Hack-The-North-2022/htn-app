@@ -16,7 +16,6 @@ namespace Manager{
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-    }
-    public static AudioClip retrieveAudio(APIReq.QuestionInfo q){
+        
     }
 }

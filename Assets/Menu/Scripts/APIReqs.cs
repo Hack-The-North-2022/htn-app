@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 using Manager;
 using System.Text;
 using System;
+using TMPro;
 namespace APIReq
 {
     [System.Serializable]
@@ -49,7 +50,7 @@ namespace APIReq
         static string baseUrl = "http://206.189.188.227:5000/";
 
         
-        public static IEnumerator GetCode(Text codeText)
+        public static IEnumerator GetCode(TMP_Text codeText)
         {
             string uri = APIReqs.baseUrl+"instance";
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri)){
@@ -71,7 +72,7 @@ namespace APIReq
                         Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
                         CodeInfo codeInfo = JsonUtility.FromJson<CodeInfo>(webRequest.downloadHandler.text);
 
-                        codeText.text = codeInfo.code; 
+                        codeText.text = "Pairing Code: " + codeInfo.code; 
                         Manager.DataManager.Instance.code = codeInfo;
                         break;
                 }
