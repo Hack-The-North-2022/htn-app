@@ -11,6 +11,30 @@ using TMPro;
 namespace APIReq
 {
     [System.Serializable]
+    public class GestureInfo{
+        string code;
+        float gestureCount;
+        float amountInStrikeZone;
+        float duration;
+        public GestureInfo(string code,float gestureCount, float amountInStrikeZone, float duration){
+            this.gestureCount = gestureCount;
+            this.amountInStrikeZone = amountInStrikeZone;
+            this.duration = duration;
+
+        }
+    }
+    [System.Serializable]
+    public class AdHawkInfo
+    {
+        string code;
+        Dictionary<string,float> data; 
+        public AdHawkInfo(string code,Dictionary<string,float> data){
+            this.code = code;
+            this.data = data;
+        }
+
+    }
+    [System.Serializable]
     public class CodeInfo
     {
         public string code;
@@ -117,6 +141,39 @@ namespace APIReq
 
 
         }
+        public static IEnumerator SendGestures(float gestureCount, float amountInStrikeZone, float duration){
+            string uri = APIReqs.baseUrl+"/send_gestures";
+            using (UnityWebRequest webRequest = new UnityWebRequest(uri,"POST")){
+                webRequest.SetRequestHeader("Content-Type", "application/json");
+                byte[] body = Encoding.UTF8.GetBytes(JsonUtility.ToJson(new GestureInfo(Manager.DataManager.Instance.code.code,gestureCount,amountInStrikeZone,duration)));
+                webRequest.uploadHandler = new UploadHandlerRaw(body);
+                webRequest.downloadHandler = new DownloadHandlerBuffer();
+                yield return webRequest.SendWebRequest();
+
+                string[] pages = uri.Split('/');
+                int page = pages.Length - 1;
+
+                switch (webRequest.result)
+                {
+                    case UnityWebRequest.Result.ConnectionError:
+                    case UnityWebRequest.Result.DataProcessingError:
+                        Debug.LogError(pages[page] + ": Error: " + webRequest.error);
+                        break;
+                    case UnityWebRequest.Result.ProtocolError:
+                        Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
+                        break;
+                    case UnityWebRequest.Result.Success:
+                        Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
+                        AuthInfo authInfo = JsonUtility.FromJson<AuthInfo>(webRequest.downloadHandler.text);
+                        
+
+                        break;
+                }
+            }
+
+                
+
+        }
         public static IEnumerator SendAudio(byte[] data){
             Debug.Log("sendAudio");
             string uri = APIReqs.baseUrl+"/answer_audio";
@@ -149,6 +206,41 @@ namespace APIReq
 
                         
             }
+
+        }
+        public static IEnumerator SendAdHawk(Dictionary<string,float> data){
+            string uri = APIReqs.baseUrl+"/send_adhawk";
+            using (UnityWebRequest webRequest = new UnityWebRequest(uri,"POST")){
+                webRequest.SetRequestHeader("Content-Type", "application/json");
+                byte[] body = Encoding.UTF8.GetBytes(JsonUtility.ToJson(new AdHawkInfo(Manager.DataManager.Instance.code.code,data)));
+                webRequest.uploadHandler = new UploadHandlerRaw(body);
+                webRequest.downloadHandler = new DownloadHandlerBuffer();
+                yield return webRequest.SendWebRequest();
+
+                string[] pages = uri.Split('/');
+                int page = pages.Length - 1;
+
+                switch (webRequest.result)
+                {
+                    case UnityWebRequest.Result.ConnectionError:
+                    case UnityWebRequest.Result.DataProcessingError:
+                        Debug.LogError(pages[page] + ": Error: " + webRequest.error);
+                        break;
+                    case UnityWebRequest.Result.ProtocolError:
+                        Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
+                        break;
+                    case UnityWebRequest.Result.Success:
+                        Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
+                        AuthInfo authInfo = JsonUtility.FromJson<AuthInfo>(webRequest.downloadHandler.text);
+                        
+
+                        break;
+                }
+            }
+
+
+                        
+
 
         }
 
@@ -200,6 +292,7 @@ namespace APIReq
             return clip;
 
         }
+        
 
 
 
