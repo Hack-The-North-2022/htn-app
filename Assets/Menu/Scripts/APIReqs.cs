@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 using Manager;
 using System.Text;
 using System;
+using System.IO;
 using TMPro;
 namespace APIReq
 {
@@ -95,7 +96,7 @@ namespace APIReq
                     case UnityWebRequest.Result.Success:
                         Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
                         CodeInfo codeInfo = JsonUtility.FromJson<CodeInfo>(webRequest.downloadHandler.text);
-
+                        codeInfo.code = "1663486608";
                         codeText.text = "Pairing Code: " + codeInfo.code; 
                         Manager.DataManager.Instance.code = codeInfo;
                         break;
@@ -175,7 +176,6 @@ namespace APIReq
 
         }
         public static IEnumerator SendAudio(byte[] data){
-            Debug.Log("sendAudio");
             string uri = APIReqs.baseUrl+"/answer_audio";
             using (UnityWebRequest webRequest = new UnityWebRequest(uri,"POST")){
                 webRequest.SetRequestHeader("Content-Type","application/json");
@@ -284,16 +284,12 @@ namespace APIReq
 
 
         }
-        public static AudioClip RetrieveAudio(APIReq.QuestionInfo q){
+        public static string RetrieveAudio(APIReq.QuestionInfo q){
             byte[] receivedBytes = Convert.FromBase64String(q.audio);
-            float[] samples = new float[receivedBytes.Length / 4]; //size of a float is 4 bytes
-            Buffer.BlockCopy(receivedBytes, 0, samples, 0, receivedBytes.Length);
-            int channels = 1; //Assuming audio is mono because microphone input usually is
-            int sampleRate = 44100; //Assuming your samplerate is 44100 or change to 48000 o
-            AudioClip clip = AudioClip.Create("ClipName", samples.Length, channels, sampleRate, false);
-            clip.SetData(samples, 0);
-            return clip;
-
+            var filepath = Path.Combine(Application.persistentDataPath, "temp.wav");
+            Debug.Log(filepath);
+            File.WriteAllBytes(filepath, receivedBytes);
+            return filepath;
         }
         
 

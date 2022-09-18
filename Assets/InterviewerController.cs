@@ -9,6 +9,7 @@ public class InterviewerController : MonoBehaviour
     public GestureScript gestureScript;
     public PersistentToggleDot eyeContactScript;
     public GameObject RecordingUI;
+    public Animator joeAnimator;
 
     ControllerInputHandler cInput;
     string _state = "";
@@ -22,6 +23,7 @@ public class InterviewerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(_state);
         if (Manager.DataManager.Instance.questions != null && Manager.DataManager.Instance.questions.Count != 0) {
             if (_state == "") {
                 if (_questionIndex == Manager.DataManager.Instance.questions.Count) {
@@ -33,26 +35,34 @@ public class InterviewerController : MonoBehaviour
                         gestureScript.StartRecording();
                         eyeContactScript.StartRecording();
                     }
+                    joeAnimator.SetBool("Talking", true);
                     _state = "saying";
                     StartCoroutine(SayQuestion(Manager.DataManager.Instance.questions[_questionIndex]));
                 }
             }
             if (_state == "response") {
-                interviewRecorder.StartRecording();
-                RecordingUI.SetActive(true);
-                StartCoroutine(ListenToSpeaker());
+                if (!interviewRecorder.recording  && cInput.LeftCon.X.wasButtonPressedLastFrame) {
+                    interviewRecorder.StartRecording();
+                    RecordingUI.SetActive(true);
+                    StartCoroutine(ListenToSpeaker());
+                } else if (cInput.LeftCon.X.wasButtonPressedLastFrame) {
+                    interviewRecorder.StopRecording();
+                }
             }
-        }
-        if (interviewRecorder.recording && cInput.LeftCon.X.wasButtonPressedLastFrame) {
-            interviewRecorder.StopRecording();
         }
     }
 
     IEnumerator SayQuestion(APIReq.QuestionInfo audio) {
-        AudioClip ac = APIReq.APIReqs.RetrieveAudio(audio);
-        interviewerAudioSource.clip = ac;
+        string ac = APIReq.APIReqs.RetrieveAudio(audio);
+        WWW loader = new WWW("file://" + ac);
+        yield return loader;
+        
+        AudioClip clip = loader.GetAudioClip(false, false, AudioType.MPEG);
+        Debug.Log(clip);
+        interviewerAudioSource.clip = clip;
         interviewerAudioSource.Play();
         yield return new WaitUntil(() => interviewerAudioSource.isPlaying == false);
+        joeAnimator.SetBool("Talking", false);
         _state = "response";
     }
 

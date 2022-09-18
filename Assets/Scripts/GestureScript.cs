@@ -33,7 +33,7 @@ public class GestureScript : MonoBehaviour
     public void StopRecording() {
         APIReq.APIReqs.SendGestures(gestureCount,amountInStrikeZone,duration);
     }
-    
+
     // Update is called once per frame
     void LateUpdate()
     {
@@ -44,8 +44,6 @@ public class GestureScript : MonoBehaviour
             Vector3 to = rightPosition - headsetPosition;
             Vector3 from = leftPosition - headsetPosition;
             float ang = Vector3.Angle(from, to);
-            Debug.Log(prevLeft);
-            Debug.Log(prevRight);
 
             if (prevLeft == Vector3.zero) prevLeft = leftPosition;
             if (prevRight == Vector3.zero) prevRight = rightPosition;

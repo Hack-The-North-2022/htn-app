@@ -8,7 +8,7 @@ public class InterviewRecorder : MonoBehaviour
 {
     bool ready=false;
     public bool recording = false;
-    string microphone = "MacBook Pro Microphone";
+    string microphone = "Headset Microphone (Oculus Virtual Audio Device)";
     AudioSource audioSource;
     void Start()
     {
@@ -26,14 +26,14 @@ public class InterviewRecorder : MonoBehaviour
     public void StartRecording(){
         if(ready&&!recording){
             recording = true;
-            audioSource.clip = Microphone.Start(microphone, true, 10, 44100);
+            audioSource.clip = Microphone.Start(null, true, 45, 44100);
         }
         
     }
     public void StopRecording(){
         recording = false;
 
-        Microphone.End(microphone);
+        Microphone.End(null);
 
         /* GetAudioBytes(audioSource.clip); */
 
