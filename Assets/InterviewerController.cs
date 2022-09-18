@@ -25,7 +25,6 @@ public class InterviewerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(_state);
         if (Manager.DataManager.Instance.questions != null && Manager.DataManager.Instance.questions.Count != 0) {
             if (_state == "") {
                 if (_questionIndex == Manager.DataManager.Instance.questions.Count) {

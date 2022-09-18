@@ -96,7 +96,6 @@ namespace APIReq
                     case UnityWebRequest.Result.Success:
                         Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
                         CodeInfo codeInfo = JsonUtility.FromJson<CodeInfo>(webRequest.downloadHandler.text);
-                        codeInfo.code = "1663486608";
                         codeText.text = "Pairing Code: " + codeInfo.code; 
                         Manager.DataManager.Instance.code = codeInfo;
                         break;
@@ -134,7 +133,7 @@ namespace APIReq
                     case UnityWebRequest.Result.Success:
                         Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
                         AuthInfo authInfo = JsonUtility.FromJson<AuthInfo>(webRequest.downloadHandler.text);
-
+                        Debug.Log("sucess " + authInfo.success);
                         Manager.DataManager.Instance.authenticated = authInfo.success;
                         break;
                 }
@@ -269,12 +268,11 @@ namespace APIReq
                         break;
                     case UnityWebRequest.Result.Success:
                         Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
-                        QuestionInfos questions = JsonUtility.FromJson<QuestionInfos>(webRequest.downloadHandler.text);
-
-                        Manager.DataManager.Instance.questions = questions.questions;
-                        
-                         
-
+                        if (webRequest.downloadHandler.text != "") {
+                            QuestionInfos questions = JsonUtility.FromJson<QuestionInfos>(webRequest.downloadHandler.text);
+                            Manager.DataManager.Instance.questions = questions.questions;
+                            DataManager.Instance.questionsRetrieved = true;
+                        }
 
                         break;
                 }

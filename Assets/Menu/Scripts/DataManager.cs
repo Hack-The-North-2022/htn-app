@@ -10,6 +10,7 @@ namespace Manager{
 
         public APIReq.CodeInfo code;
         public bool authenticated = false;
+        public bool questionsRetrieved = false;
 
         private void Awake()
         {
