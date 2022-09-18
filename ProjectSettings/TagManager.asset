@@ -5,6 +5,17 @@ TagManager:
   serializedVersion: 2
   tags:
   - ScreenSpaceBoardOrigin
+  - RoomLight
+  - Wall
+  - Art
+  - Floor
+  - Desk
+  - Bookshelf
+  - Face
+  - Body
+  - Hands
+  - Door
+  - Ceiling
   layers:
   - Default
   - TransparentFX

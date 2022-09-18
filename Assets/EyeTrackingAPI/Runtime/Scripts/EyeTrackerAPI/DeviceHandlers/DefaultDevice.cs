@@ -192,6 +192,7 @@ namespace AdhawkApi
             HideTarget();
 
             Debug.Log("Calibration request.");
+            yield return new WaitForSeconds(2f);
 
             UDPRequestStatus startReqStatus = UDPRequestStatus.None;
 

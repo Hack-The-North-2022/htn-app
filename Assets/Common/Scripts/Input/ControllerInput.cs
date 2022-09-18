@@ -31,6 +31,7 @@ public class ControllerInput : MonoBehaviour
         {
             if (cInput.LeftCon.Trigger.wasButtonPressedLastFrame)
             {
+                Debug.Log(5);
                 EyeTrackerAPI.Instance.CalibratorMoveNextPoint();
             }
         }
