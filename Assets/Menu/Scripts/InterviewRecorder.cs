@@ -30,7 +30,7 @@ public class InterviewRecorder : MonoBehaviour
         }
         
     }
-    public void StopRecording(){
+    public void StopRecording(int idx){
         recording = false;
 
         Microphone.End(null);
@@ -41,7 +41,7 @@ public class InterviewRecorder : MonoBehaviour
         SavWav.Save("temp.wav",audioSource.clip);
         var filepath = Path.Combine(Application.persistentDataPath, "temp.wav");
 
-        StartCoroutine(APIReq.APIReqs.SendAudio(File.ReadAllBytes(filepath)));
+        StartCoroutine(APIReq.APIReqs.SendAudio(File.ReadAllBytes(filepath), idx));
     }
     /* public byte[] GetAudioBytes(AudioClip audioClip) */
     /* { */

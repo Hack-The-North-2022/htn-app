@@ -61,12 +61,12 @@ namespace APIReq
     public class AudioInfo
     {
         public string audio;
-        public string id;
+        public string text;
         public string code;
-        public AudioInfo(string code, string id, byte[] audio){
+        public AudioInfo(string code, string text, byte[] audio){
             this.code = code;
             this.audio = Convert.ToBase64String(audio);
-            this.id = id;
+            this.text = text;
         }
     }
     [System.Serializable]
@@ -175,11 +175,11 @@ namespace APIReq
                 
 
         }
-        public static IEnumerator SendAudio(byte[] data){
+        public static IEnumerator SendAudio(byte[] data, int idx){
             string uri = APIReqs.baseUrl+"/answer_audio";
             using (UnityWebRequest webRequest = new UnityWebRequest(uri,"POST")){
                 webRequest.SetRequestHeader("Content-Type","application/json");
-                byte[] body = Encoding.UTF8.GetBytes(JsonUtility.ToJson(new AudioInfo(Manager.DataManager.Instance.code.code,"1",data)));
+                byte[] body = Encoding.UTF8.GetBytes(JsonUtility.ToJson(new AudioInfo(Manager.DataManager.Instance.code.code,Manager.DataManager.Instance.questions[idx].text,data)));
                 /* Debug.Log(JsonUtility.ToJson(new AudioInfo */
                 webRequest.uploadHandler = new UploadHandlerRaw(body);
                 webRequest.downloadHandler = new DownloadHandlerBuffer();

@@ -10,10 +10,12 @@ public class InterviewerController : MonoBehaviour
     public PersistentToggleDot eyeContactScript;
     public GameObject RecordingUI;
     public Animator joeAnimator;
+    public GameObject finalMessage;
 
     ControllerInputHandler cInput;
     string _state = "";
     private int _questionIndex = 0;
+    private AudioClip _completeInterview;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +29,8 @@ public class InterviewerController : MonoBehaviour
         if (Manager.DataManager.Instance.questions != null && Manager.DataManager.Instance.questions.Count != 0) {
             if (_state == "") {
                 if (_questionIndex == Manager.DataManager.Instance.questions.Count) {
-                    Debug.Log("Completed");
+                    finalMessage.SetActive(true);
+                    Debug.Log("Final Statement");
                     gestureScript.StopRecording();
                     eyeContactScript.StopRecording();                    
                 } else {
@@ -46,7 +49,7 @@ public class InterviewerController : MonoBehaviour
                     RecordingUI.SetActive(true);
                     StartCoroutine(ListenToSpeaker());
                 } else if (cInput.LeftCon.X.wasButtonPressedLastFrame) {
-                    interviewRecorder.StopRecording();
+                    interviewRecorder.StopRecording(_questionIndex);
                 }
             }
         }
