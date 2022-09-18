@@ -6,6 +6,7 @@ namespace Manager{
     public class DataManager : MonoBehaviour
     {
         public static DataManager Instance;
+        public List<APIReq.QuestionInfo> questions;
 
         public APIReq.CodeInfo code;
         public bool authenticated = false;
@@ -15,5 +16,7 @@ namespace Manager{
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+    }
+    public static AudioClip retrieveAudio(APIReq.QuestionInfo q){
     }
 }

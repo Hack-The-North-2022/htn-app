@@ -1,4 +1,5 @@
 using System.Collections;
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +18,18 @@ namespace APIReq
     public class AuthInfo
     {
         public bool success;
+    }
+    [System.Serializable]
+    public class QuestionInfos
+    {
+        public List<QuestionInfo> questions;
+    }
+    [System.Serializable]
+    public class QuestionInfo
+    {
+        public string text;
+        public string audio;
+        public string question_id;
     }
     [System.Serializable]
     public class AudioInfo
@@ -109,6 +122,7 @@ namespace APIReq
             using (UnityWebRequest webRequest = new UnityWebRequest(uri,"POST")){
                 webRequest.SetRequestHeader("Content-Type","application/json");
                 byte[] body = Encoding.UTF8.GetBytes(JsonUtility.ToJson(new AudioInfo(Manager.DataManager.Instance.code.code,"1",data)));
+                /* Debug.Log(JsonUtility.ToJson(new AudioInfo */
                 webRequest.uploadHandler = new UploadHandlerRaw(body);
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 yield return webRequest.SendWebRequest();
@@ -134,6 +148,55 @@ namespace APIReq
 
                         
             }
+
+        }
+
+        public static IEnumerator QuestionAudio(){
+            string uri = APIReqs.baseUrl+"/question_audio";
+            using (UnityWebRequest webRequest = new UnityWebRequest(uri,"POST")){
+                webRequest.SetRequestHeader("Content-Type","application/json");
+                webRequest.uploadHandler = new UploadHandlerRaw(new byte[10]);
+                webRequest.downloadHandler = new DownloadHandlerBuffer();
+                yield return webRequest.SendWebRequest();
+
+                string[] pages = uri.Split('/');
+                int page = pages.Length - 1;
+
+                switch (webRequest.result)
+                {
+                    case UnityWebRequest.Result.ConnectionError:
+                    case UnityWebRequest.Result.DataProcessingError:
+                        Debug.LogError(pages[page] + ": Error: " + webRequest.error);
+                        break;
+                    case UnityWebRequest.Result.ProtocolError:
+                        Debug.LogError(pages[page] + ": HTTP Error: " + webRequest.error);
+                        break;
+                    case UnityWebRequest.Result.Success:
+                        Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
+                        QuestionInfos questions = JsonUtility.FromJson<QuestionInfos>(webRequest.downloadHandler.text);
+
+                        Manager.DataManager.Instance.questions = questions.questions;
+                        
+                         
+
+
+                        break;
+                }
+
+                        
+            }
+
+
+        }
+        public static AudioClip RetrieveAudio(APIReq.QuestionInfo q){
+            byte[] receivedBytes = Convert.FromBase64String(q.audio);
+            float[] samples = new float[receivedBytes.Length / 4]; //size of a float is 4 bytes
+            Buffer.BlockCopy(receivedBytes, 0, samples, 0, receivedBytes.Length);
+            int channels = 1; //Assuming audio is mono because microphone input usually is
+            int sampleRate = 44100; //Assuming your samplerate is 44100 or change to 48000 o
+            AudioClip clip = AudioClip.Create("ClipName", samples.Length, channels, sampleRate, false);
+            clip.SetData(samples, 0);
+            return clip;
 
         }
 
