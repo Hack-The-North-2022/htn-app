@@ -28,10 +28,17 @@ namespace APIReq
     public class AdHawkInfo
     {
         string code;
-        Dictionary<string,float> data; 
-        public AdHawkInfo(string code,Dictionary<string,float> data){
+        string[] labels;
+        float[] data;
+        public AdHawkInfo(string code, Dictionary<string,float> datas){
+            labels = new string[datas.Count];
+            data = new float[datas.Count];
+            int idx = 0;
+            foreach(KeyValuePair<string, float> kvp in datas){
+                labels[idx] = kvp.Key;
+                data[idx] = kvp.Value;
+            }
             this.code = code;
-            this.data = data;
         }
 
     }
@@ -208,10 +215,13 @@ namespace APIReq
 
         }
         public static IEnumerator SendAdHawk(Dictionary<string,float> data){
+            Debug.Log(data);
+            Debug.Log(data.Count);
             string uri = APIReqs.baseUrl+"/send_adhawk";
             using (UnityWebRequest webRequest = new UnityWebRequest(uri,"POST")){
                 webRequest.SetRequestHeader("Content-Type", "application/json");
                 byte[] body = Encoding.UTF8.GetBytes(JsonUtility.ToJson(new AdHawkInfo(Manager.DataManager.Instance.code.code,data)));
+                Debug.Log(JsonUtility.ToJson(new AdHawkInfo(Manager.DataManager.Instance.code.code,data)));
                 webRequest.uploadHandler = new UploadHandlerRaw(body);
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 yield return webRequest.SendWebRequest();
